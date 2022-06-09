@@ -43,16 +43,23 @@ const config = {
 };
 
 const getAirportsData = (search) => axios.get(`/airports-data/${search}`, config);
+
 const getLastTafEndTime = (airportIcao) => axios.get(`/latest-taf-end-time/${airportIcao}`, config);
+
 const createRunwayPredictionInput = ({
   originIcao,
   destinationIcao,
   timestamp
 }) => axios.get(`/arrivals-runway-prediction-input?origin_icao=${originIcao}&destination_icao=${destinationIcao}&timestamp=${timestamp}`, config);
+
 const createRunwayConfigPredictionInput = ({
   destinationIcao,
   timestamp
 }) => axios.get(`/arrivals-runway-config-prediction-input?&destination_icao=${destinationIcao}&timestamp=${timestamp}`, config);
+
+const getArrivalsRunwayStats = (destinationIcao) => axios.get(`/arrivals/${destinationIcao}/runway-prediction-stats`, config);
+
+const getArrivalsRunwayConfigStats = (destinationIcao) => axios.get(`/arrivals/${destinationIcao}/runway-config-prediction-stats`, config);
 
 // const createDataFeature = (data) => axios.post('/datafeatures/', data, config);
 // const getDataFeatures = () => axios.get('/datafeatures/', config);
@@ -145,4 +152,6 @@ export {
   getLastTafEndTime,
   createRunwayPredictionInput,
   createRunwayConfigPredictionInput,
+  getArrivalsRunwayStats,
+  getArrivalsRunwayConfigStats,
 };
