@@ -14,18 +14,22 @@ AppConfig.destinationAirports = [
     {
         icao: 'EHAM',
         name: ' Amsterdam Airport Schiphol',
+        coordinates: [4.7638897896, 52.3086013794],
     },
     {
         icao: 'LEMD',
         name: 'Madrid Barajas International Airport',
+        coordinates: [-3.56676, 40.4936],
     },
     {
         icao: 'LFPO',
         name: 'Paris-Orly Airport',
+        coordinates: [2.3594400883, 48.7252998352],
     },
     {
         icao: 'LOWW',
         name: 'Vienna International Airport',
+        coordinates: [16.5697002411, 48.1102981567],
     },
 ]
 AppConfig.getAirportData = (airportIcao) => {

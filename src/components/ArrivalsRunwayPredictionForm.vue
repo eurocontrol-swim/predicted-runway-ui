@@ -70,7 +70,6 @@ export default {
     originAirport: null,
     timestamp: null,
     endTimestamp: null,
-    predictionInput: null,
     modal: null,
   }),
   methods: {
@@ -98,9 +97,16 @@ export default {
 
       api.createRunwayPredictionInput(data)
         .then((res) => {
-          this.predictionInput = res.data;
+          const query = {
+            origin_icao: res.data.origin_icao,
+            timestamp: res.data.timestamp,
+            wind_direction: res.data.wind_direction,
+            wind_speed: res.data.wind_speed,
+            wind_input_source: res.data.wind_input_source,
+          };
+
           this.modal.hide();
-          this.$router.push({ name: 'ArrivalsRunwayPrediction', query: this.predictionInput})
+          this.$router.push({ name: 'ArrivalsRunwayPrediction', query})
         })
         .catch((error) => {
           console.error(error)

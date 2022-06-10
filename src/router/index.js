@@ -1,8 +1,5 @@
 import * as VueRouter from 'vue-router';
 import HomePage from '@/pages/HomePage.vue';
-import ArrivalsPage from '@/pages/ArrivalsPage.vue';
-import ArrivalsRunwayPredictionPage from '@/pages/ArrivalsRunwayPredictionPage.vue';
-import ArrivalsRunwayConfigPredictionPage from '@/pages/ArrivalsRunwayConfigPredictionPage.vue';
 
 const routes = [
   {
@@ -11,19 +8,19 @@ const routes = [
     component: HomePage,
     children: [
       {
-        path: 'arrivals/:destinationIcao',
+        path: '/arrivals/:destinationIcao',
         name: 'Arrivals',
-        component: ArrivalsPage,
+        component: () => import(/* webpackChunkName: "arrivals" */ '@/pages/ArrivalsPage'),
         children: [
           {
-            path: 'runway-prediction',
+            path: '/arrivals/:destinationIcao/runway-prediction',
             name: 'ArrivalsRunwayPrediction',
-            component: ArrivalsRunwayPredictionPage,
+            component: () => import(/* webpackChunkName: "runway-prediction" */ '@/pages/ArrivalsRunwayPredictionPage')
           },
           {
-            path: 'runway-config-prediction',
+            path: '/arrivals/:destinationIcao/runway-config-prediction',
             name: 'ArrivalsRunwayConfigPrediction',
-            component: ArrivalsRunwayConfigPredictionPage,
+            component: () => import(/* webpackChunkName: "runway-config-prediction" */ '@/pages/ArrivalsRunwayConfigPredictionPage')
           }
         ]
       }

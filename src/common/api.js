@@ -50,102 +50,41 @@ const createRunwayPredictionInput = ({
   originIcao,
   destinationIcao,
   timestamp
-}) => axios.get(`/arrivals-runway-prediction-input?origin_icao=${originIcao}&destination_icao=${destinationIcao}&timestamp=${timestamp}`, config);
+}) => axios.get(`/arrivals/${destinationIcao}/runway-prediction-input?origin_icao=${originIcao}&timestamp=${timestamp}`, config);
 
 const createRunwayConfigPredictionInput = ({
   destinationIcao,
   timestamp
-}) => axios.get(`/arrivals-runway-config-prediction-input?&destination_icao=${destinationIcao}&timestamp=${timestamp}`, config);
+}) => axios.get(`/arrivals/${destinationIcao}/runway-config-prediction-input?timestamp=${timestamp}`, config);
 
 const getArrivalsRunwayStats = (destinationIcao) => axios.get(`/arrivals/${destinationIcao}/runway-prediction-stats`, config);
 
 const getArrivalsRunwayConfigStats = (destinationIcao) => axios.get(`/arrivals/${destinationIcao}/runway-config-prediction-stats`, config);
 
-// const createDataFeature = (data) => axios.post('/datafeatures/', data, config);
-// const getDataFeatures = () => axios.get('/datafeatures/', config);
-// const putDataFeature = (id, data) => axios.put(`/datafeatures/${id}`, data, config);
-// const getDataFeatureViews = (id) => axios.get(`/datafeatures/${id}/views`, config);
-// const getDataFeatureOutboundServices = (id) => axios.get(`/datafeatures/${id}/data_services_outbound`, config);
-// const getDataViewFeatures = () => axios.get('/datafeatures/?view=true', config);
-// const getDataFeature = (id) => axios.get(`/datafeatures/${id}`, config);
-// const deleteDataFeature = (id) => axios.delete(`/datafeatures/${id}`, config);
-//
-// const getDatasets = () => axios.get('/datasets/', config);
-// const getDataset = (id) => axios.get(`/datasets/${id}`, config);
-// const deleteDataset = (id) => axios.delete(`/datasets/${id}`, config);
-// const doanloadJSONDatafile = (id, index) => axios.get(`/datasets/${id}/datafiles/${index}/download_json`, config);
-// const createDataset = (data) => axios.post('/datasets/', data, config);
-// const getDatasetFeatures = (id) => axios.get(`/datasets/${id}/features`, config);
-// const uploadDataFile = (id, data) => axios.post(`/datasets/${id}/upload_datafile`, data, config);
-// const getDataViews = () => axios.get('/dataviews/', config);
-// const createDataView = (data) => axios.post('/dataviews/', data, config);
-// const updateDataView = (id, data) => axios.put(`/dataviews/${id}`, data, config);
-// const getDataView = (id) => axios.get(`/dataviews/${id}`, config);
-// const deleteDataView = (id) => axios.delete(`/dataviews/${id}`, config);
-// const getDataViewResult = ({
-//   id,
-//   data,
-//   offset = 0,
-//   limit = 10,
-// }) => axios.post(`/dataviews/${id}/result?offset=${offset}&limit=${limit}`, data, config);
-// const getQueryJsonNodes = (data) => axios.post('/dataviews/query_json_nodes', data, config);
-// const dataViewsQueryTest = ({ data, offset = 0, limit = 10 }) => axios.post(`/dataviews/test_query?offset=${offset}&limit=${limit}`, data, config);
-//
-// const getAppConfig = () => axios.get('/config/', config);
-//
-// const importDataSource = (data) => axios.post('/data_in/import/', data, config);
-// const exportDataSource = (id) => {
-//   const extraConfig = config;
-//
-//   extraConfig.responseType = 'blob';
-//
-//   return axios.get(`/data_in/${id}/export`, extraConfig);
-// };
-//
-// const getDataServicesInbound = () => axios.get('/data_services_inbound/', config);
-// const getDataServiceInbound = (id) => axios.get(`/data_services_inbound/${id}`, config);
-// const putDataServiceInbound = (id, data) => axios.put(`/data_services_inbound/${id}`, data, config);
-// const deleteDataServiceInbound = (id) => axios.delete(`/data_services_inbound/${id}`, config);
-// const createDataServiceInbound = (data) => axios.post('/data_services_inbound/', data, config);
-// const getDataServiceInboundFeatures = (id) => axios.get(`/data_services_inbound/${id}/features`, config);
-// const startDataServiceInbound = (id, data) => axios.post(`/data_services_inbound/${id}/start`, data, config);
-// const pauseDataServiceInbound = (id) => axios.post(`/data_services_inbound/${id}/pause`, {}, config);
-//
-// const getDataServicesOutbound = () => axios.get('/data_services_outbound/', config);
-// const getDataServiceOutbound = (id) => axios.get(`/data_services_outbound/${id}`, config);
-// const putDataServiceOutbound = (id, data) => axios.put(`/data_services_outbound/${id}`, data, config);
-// const deleteDataServiceOutbound = (id) => axios.delete(`/data_services_outbound/${id}`, config);
-// const createDataServiceOutbound = (data) => axios.post('/data_services_outbound/', data, config);
-// const startDataServiceOutbound = (id, data) => axios.post(`/data_services_outbound/${id}/start`, data, config);
-// const pauseDataServiceOutbound = (id) => axios.post(`/data_services_outbound/${id}/pause`, {}, config);
-//
-// const getAuxiliaryServices = () => axios.get('/auxiliary_services/', config);
-//
-// const getServiceBindingGroups = () => axios.get('/service_binding_groups/', config);
-// const getServiceBindingGroup = (id) => axios.get(`/service_binding_groups/${id}`, config);
-// const createServiceBindingGroup = (data) => axios.post('/service_binding_groups/', data, config);
-// const getWsdlOperations = (id, wsdlName) => axios.get(`/service_binding_groups/${id}/wsdl_operations?wsdl_name=${wsdlName}`, config);
-// const patchServiceBindingGroup = (id, data) => axios.patch(`/service_binding_groups/${id}`, data, config);
-//
-// const triggerServiceBinding = (data, triggerAsJson) => axios.post(`/service_bindings/trigger?as_json=${triggerAsJson.toString()}`, data, config);
-//
-// const exportDataset = (id) => {
-//   const extraConfig = config;
-//
-//   extraConfig.responseType = 'blob';
-//
-//   return axios.get(`/data_in/${id}/export?type=dataset`, extraConfig);
-// };
-//
-// const exportDataServiceInbound = (id) => {
-//   const extraConfig = config;
-//
-//   extraConfig.responseType = 'blob';
-//
-//   return axios.get(`/data_in/${id}/export?type=data_service_inbound`, extraConfig);
-// };
-//
-// const importDataIn = (data) => axios.post('/data_in/import/', data, config);
+const getRunwayPrediction = ({
+  destinationIcao,
+  originIcao,
+  timestamp,
+  windDirection,
+  windSpeed,
+  windInputSource
+}) => axios.get(`/arrivals/${destinationIcao}/runway-prediction?origin_icao=${originIcao}
+&timestamp=${timestamp}&wind_direction=${windDirection}&wind_speed=${windSpeed}
+&wind_input_source=${windInputSource}`, config);
+
+const getRunwayConfigPrediction = ({
+  destinationIcao,
+  timestamp,
+  windDirection,
+  windSpeed,
+  windInputSource
+}) => axios.get(`/arrivals/${destinationIcao}/runway-config-prediction?timestamp=${timestamp}
+&wind_direction=${windDirection}&wind_speed=${windSpeed}
+&wind_input_source=${windInputSource}`, config);
+
+const getOpenApiUrl = () => {
+  return `${config.baseURL}/ui/`;
+}
 
 export {
   getAirportsData,
@@ -154,4 +93,7 @@ export {
   createRunwayConfigPredictionInput,
   getArrivalsRunwayStats,
   getArrivalsRunwayConfigStats,
+  getRunwayPrediction,
+  getRunwayConfigPrediction,
+  getOpenApiUrl,
 };

@@ -69,9 +69,15 @@ export default {
 
       api.createRunwayConfigPredictionInput(data)
         .then((res) => {
-          this.predictionInput = res.data;
+          const query = {
+            timestamp: res.data.timestamp,
+            wind_direction: res.data.wind_direction,
+            wind_speed: res.data.wind_speed,
+            wind_input_source: res.data.wind_input_source,
+          };
+
           this.modal.hide();
-          this.$router.push({ name: 'ArrivalsRunwayConfigPrediction', query: this.predictionInput});
+          this.$router.push({ name: 'ArrivalsRunwayConfigPrediction', query});
         })
         .catch((error) => {
           console.error(error)

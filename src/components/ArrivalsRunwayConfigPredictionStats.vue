@@ -64,7 +64,7 @@
                         <strong>Is workday</strong>
                       </td>
 
-                      <td>{{ (value * 100).toFixed(2) }}</td>
+                      <td>{{ (value * 100).toFixed(2) }}%</td>
                     </tr>
                 </tbody>
               </table>
@@ -82,57 +82,57 @@
                 <tbody>
                   <tr>
                     <td><strong>F1 weighted</strong></td>
-                    <td>{{ (stats.test_with_metar.f1_weighted).toFixed(2) }}</td>
-                    <td>{{ (stats.test_with_taf.f1_weighted).toFixed(2) }}</td>
+                    <td>{{ (stats.test_with_metar.f1_weighted).toFixed(2) }}%</td>
+                    <td>{{ (stats.test_with_taf.f1_weighted).toFixed(2) }}%</td>
                   </tr>
                   <tr>
                     <td><strong>Balanced accuracy</strong></td>
-                    <td>{{ (stats.test_with_metar.balanced_accuracy).toFixed(2) }}</td>
-                    <td>{{ (stats.test_with_taf.balanced_accuracy).toFixed(2) }}</td>
+                    <td>{{ (stats.test_with_metar.balanced_accuracy).toFixed(2) }}%</td>
+                    <td>{{ (stats.test_with_taf.balanced_accuracy).toFixed(2) }}%</td>
                   </tr>
                   <tr>
                     <td><strong>Balanced accuracy over random</strong></td>
-                    <td>{{ (stats.test_with_metar.balanced_accuracy_over_rand).toFixed(2) }}</td>
-                    <td>{{ (stats.test_with_taf.balanced_accuracy_over_rand).toFixed(2) }}</td>
+                    <td>{{ (stats.test_with_metar.balanced_accuracy_over_rand).toFixed(2) }}%</td>
+                    <td>{{ (stats.test_with_taf.balanced_accuracy_over_rand).toFixed(2) }}%</td>
                   </tr>
                   <tr>
                     <td><strong>Accuracy</strong></td>
-                    <td>{{ (stats.test_with_metar.accuracy).toFixed(2) }}</td>
-                    <td>{{ (stats.test_with_taf.accuracy).toFixed(2) }}</td>
+                    <td>{{ (stats.test_with_metar.accuracy).toFixed(2) }}%</td>
+                    <td>{{ (stats.test_with_taf.accuracy).toFixed(2) }}%</td>
                   </tr>
                   <tr>
                     <td><strong>Recall weighted</strong></td>
-                    <td>{{ (stats.test_with_metar.recall_weighted).toFixed(2) }}</td>
-                    <td>{{ (stats.test_with_taf.recall_weighted).toFixed(2) }}</td>
+                    <td>{{ (stats.test_with_metar.recall_weighted).toFixed(2) }}%</td>
+                    <td>{{ (stats.test_with_taf.recall_weighted).toFixed(2) }}%</td>
                   </tr>
                   <tr>
                     <td><strong>Precision weighted</strong></td>
-                    <td>{{ (stats.test_with_metar.precision_weighted).toFixed(2) }}</td>
-                    <td>{{ (stats.test_with_taf.precision_weighted).toFixed(2) }}</td>
+                    <td>{{ (stats.test_with_metar.precision_weighted).toFixed(2) }}%</td>
+                    <td>{{ (stats.test_with_taf.precision_weighted).toFixed(2) }}%</td>
                   </tr>
                   <tr>
                     <td><strong>Top 2</strong></td>
-                        <td v-if="stats.test_with_metar.top_2">{{ (stats.test_with_metar.top_2).toFixed(2) }}</td>
+                        <td v-if="stats.test_with_metar.top_2">{{ (stats.test_with_metar.top_2).toFixed(2) }}%</td>
                         <td v-else>NA</td>
-                        <td v-if="stats.test_with_taf.top_2">{{ (stats.test_with_taf.top_2).toFixed(2) }}</td>
+                        <td v-if="stats.test_with_taf.top_2">{{ (stats.test_with_taf.top_2).toFixed(2) }}%</td>
                         <td v-else>NA</td>
                   </tr>
                   <tr>
                     <td><strong>ROC AUC</strong></td>
-                    <td v-if="stats.test_with_metar.roc_auc">{{ (stats.test_with_metar.roc_auc).toFixed(2) }}</td>
+                    <td v-if="stats.test_with_metar.roc_auc">{{ (stats.test_with_metar.roc_auc).toFixed(2) }}%</td>
                     <td v-else>NA</td>
-                    <td v-if="stats.test_with_taf.roc_auc">{{ (stats.test_with_taf.roc_auc).toFixed(2) }}</td>
+                    <td v-if="stats.test_with_taf.roc_auc">{{ (stats.test_with_taf.roc_auc).toFixed(2) }}%</td>
                     <td v-else>NA</td>
                   </tr>
                   <tr>
                     <td><strong>Jaccard score</strong></td>
-                    <td>{{ (stats.test_with_metar.jaccard_score) }}</td>
-                    <td>{{ (stats.test_with_taf.jaccard_score) }}</td>
+                    <td>{{ (stats.test_with_metar.jaccard_score).toFixed(2) }}%</td>
+                    <td>{{ (stats.test_with_taf.jaccard_score).toFixed(2) }}%</td>
                   </tr>
                   <tr>
                     <td><strong>Hamming loss</strong></td>
-                    <td>{{ (stats.test_with_metar.hamming_loss) }}</td>
-                    <td>{{ (stats.test_with_taf.hamming_loss) }}</td>
+                    <td>{{ (stats.test_with_metar.hamming_loss).toFixed(2) }}%</td>
+                    <td>{{ (stats.test_with_taf.hamming_loss).toFixed(2) }}%</td>
                   </tr>
                 </tbody>
               </table>
@@ -172,3 +172,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+
+  .stats-table {
+      font-size: 0.9rem;
+  }
+</style>
