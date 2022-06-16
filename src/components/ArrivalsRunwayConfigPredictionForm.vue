@@ -1,6 +1,6 @@
 <template>
 
-  <div class="modal fade" id="rcpForm" aria-hidden="true" aria-labelledby="rcpForm" tabindex="-1" ref="rcpForm">
+  <div class="modal fade" id="rcpFormModal" aria-hidden="true" aria-labelledby="rcpFormModal" tabindex="-1" ref="rcpFormModal">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
@@ -19,10 +19,15 @@
                 </DateTimeRange>
               </div>
             </div>
+            <div class="mb-3" v-if="formErrorMessage">
+              <ErrorMessage
+                :message="formErrorMessage"
+              ></ErrorMessage>
+            </div>
           </div>
           <div class="modal-footer">
             <div class="mb-3">
-                <a class="btn btn-primary" id="rpFormButton" @click="submitForm()">Predict</a>
+                <a :class="submitButtonClass" id="rpFormButton" @click="submitForm()">Predict</a>
             </div>
           </div>
         </form>
@@ -34,22 +39,32 @@
 
 <script>
 import * as api from '@/common/api';
-import {Modal} from 'bootstrap';
+import ErrorHandler from '@/mixins/ErrorHandler.vue';
+import ErrorMessage from "@/components/ErrorMessage";
+import RouteHandler from '@/mixins/RouteHandler.vue';
 import DateTimeRange from '@/components/DateTimeRange.vue';
+import {Modal} from 'bootstrap';
 
 export default {
   name: "ArrivalsRunwayConfigPredictionForm",
   components: {
+    ErrorMessage,
     DateTimeRange,
   },
+  mixins: [
+    ErrorHandler,
+    RouteHandler,
+  ],
   data: () => ({
     timestamp: null,
     endTimestamp: null,
     modal: null,
+    formErrorMessage: null,
   }),
   methods: {
     resetForm() {
       this.endTimestamp = null;
+      this.formErrorMessage = null;
     },
     getLastTafEndTime(airportIcao) {
       api.getLastTafEndTime(airportIcao)
@@ -57,8 +72,7 @@ export default {
           this.endTimestamp = res.data.end_timestamp;
         })
         .catch((error) => {
-          console.log(error);
-          // this.handleError({ error, defaultMessage: 'Failed to retrieve datasets.' });
+          this.handleFormError({error});
         });
     },
     submitForm() {
@@ -70,31 +84,60 @@ export default {
       api.createRunwayConfigPredictionInput(data)
         .then((res) => {
           const query = {
-            timestamp: res.data.timestamp,
-            wind_direction: res.data.wind_direction,
-            wind_speed: res.data.wind_speed,
+            timestamp: res.data.timestamp.toString(),
+            wind_direction: res.data.wind_direction.toString(),
+            wind_speed: res.data.wind_speed.toString(),
             wind_input_source: res.data.wind_input_source,
           };
 
           this.modal.hide();
-          this.$router.push({ name: 'ArrivalsRunwayConfigPrediction', query});
+          this.goToPage({
+            name: 'ArrivalsRunwayConfigPrediction',
+            params: this.$route.params,
+            query
+          });
         })
         .catch((error) => {
-          console.error(error)
+          this.handleFormError({error});
         })
     },
     onDateTimeChange(timestamp) {
       this.timestamp = timestamp;
+      if (this.formErrorMessage) {
+        this.formErrorMessage = null;
+      }
+    },
+    handleFormError({error, defaultMessage = ''}) {
+      if (this.isGenericError(error)) {
+        this.handleApiError({error, defaultMessage});
+        this.modal.hide();
+      } else {
+        this.formErrorMessage = error.response.data.detail;
+      }
+    },
+  },
+  computed: {
+    hasErrors() {
+      return Boolean(this.formErrorMessage);
+    },
+    submitButtonClass() {
+      let _class = 'btn btn-primary';
+
+      if (this.hasErrors) {
+        _class = `${_class} disabled`;
+      }
+
+      return _class;
     },
   },
   mounted() {
-    this.modal = new Modal('#rcpForm');
+    this.modal = new Modal('#rcpFormModal');
 
     const self = this;
-    this.$refs.rcpForm.addEventListener('show.bs.modal', function () {
+    this.$refs.rcpFormModal.addEventListener('show.bs.modal', function () {
       self.getLastTafEndTime(self.$route.params.destinationIcao);
     });
-    this.$refs.rcpForm.addEventListener('hide.bs.modal', function () {
+    this.$refs.rcpFormModal.addEventListener('hide.bs.modal', function () {
       self.resetForm();
     });
   },

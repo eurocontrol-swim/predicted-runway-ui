@@ -108,12 +108,16 @@
 <script>
 import * as api from "@/common/api";
 import ArrivalsRunwayConfigPredictionMap from "@/components/ArrivalsRunwayConfigPredictionMap";
+import ErrorHandler from "@/mixins/ErrorHandler";
 
 export default {
   name: "ArrivalsRunwayConfigPredictionPage",
   components: {
     ArrivalsRunwayConfigPredictionMap,
   },
+  mixins: [
+    ErrorHandler,
+  ],
   data: () => ({
     result: null,
     selectedConfigRowIndex: null,
@@ -133,8 +137,7 @@ export default {
           this.result = res.data;
         })
         .catch((error) => {
-          console.log(error);
-          // this.handleError({ error, defaultMessage: 'Failed to retrieve datasets.' });
+          this.handleApiError({error})
         });
     },
     datetimeFromTimestamp(timestamp) {

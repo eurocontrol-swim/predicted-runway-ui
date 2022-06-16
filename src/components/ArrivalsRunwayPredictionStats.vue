@@ -3,10 +3,16 @@
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="runwayModelStatsModalLabel">{{ $route.params.destinationIcao }} | Runway Model statistics</h5>
+          <h5 class="modal-title" id="runwayModelStatsModalLabel">{{ $route.params.destinationIcao }} | Runway in use - Model statistics</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div v-if="stats"   class="modal-body">
+          <div v-if="error" class="modal-body">
+            <ErrorMessage
+              :message="error"
+            ></ErrorMessage>
+          </div>
+          <div v-else-if="stats" class="modal-body">
+
             <div class="table-responsive">
               <table class="table table-sm caption-top stats-table">
                   <caption>General</caption>
@@ -135,11 +141,20 @@
 
 <script>
 import * as api from '@/common/api';
+import ErrorHandler from '@/mixins/ErrorHandler.vue';
+import ErrorMessage from '@/components/ErrorMessage.vue';
 
 export default {
   name: "ArrivalsRunwayPredictionStats",
+  components: {
+    ErrorMessage,
+  },
+  mixins: [
+    ErrorHandler,
+  ],
   data: () => ({
     stats: null,
+    error: null,
   }),
   methods: {
     getStats() {
@@ -147,9 +162,8 @@ export default {
         .then((res) => {
           this.stats = res.data;
         })
-        .catch((error) => {
-          console.log(error);
-          // this.handleError({ error, defaultMessage: 'Failed to retrieve datasets.' });
+        .catch(() => {
+          this.error = 'Runway prediction statistics are not available at the moment. Please try again later.';
         });
     },
   },
@@ -157,6 +171,10 @@ export default {
     const self = this;
     this.$refs.rpStats.addEventListener('show.bs.modal', function () {
       self.getStats();
+    });
+    this.$refs.rpStats.addEventListener('hide.bs.modal', function () {
+      self.stats = null;
+      self.error = null;
     });
   }
 };

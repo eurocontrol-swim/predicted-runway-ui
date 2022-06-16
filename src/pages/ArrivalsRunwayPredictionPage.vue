@@ -105,20 +105,26 @@
 </template>
 
 <script>
-import ArrivalsRunwayPredictionMap from "@/components/ArrivalsRunwayPredictionMap";
 import * as api from "@/common/api";
+import ErrorHandler from "@/mixins/ErrorHandler";
+import ArrivalsRunwayPredictionMap from "@/components/ArrivalsRunwayPredictionMap";
 
 export default {
   name: "ArrivalsRunwayPredictionPage",
   components: {
     ArrivalsRunwayPredictionMap,
   },
+  mixins: [
+    ErrorHandler,
+  ],
   data: () => ({
     result: null,
     selectedRow: 0,
   }),
   methods: {
     getPredictionResult() {
+      this.result = null;
+
       const input = {
         destinationIcao: this.$route.params.destinationIcao,
         originIcao: this.$route.query.origin_icao,
@@ -133,8 +139,7 @@ export default {
           this.result = res.data;
         })
         .catch((error) => {
-          console.log(error);
-          // this.handleError({ error, defaultMessage: 'Failed to retrieve datasets.' });
+          this.handleApiError({error})
         });
     },
     datetimeFromTimestamp(timestamp) {

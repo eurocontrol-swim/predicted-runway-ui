@@ -1,4 +1,5 @@
 import L from "leaflet";
+import _ from "lodash";
 
 const initMap = (elementId, center_coordinates) => {
   const map = L.map(elementId);
@@ -31,9 +32,14 @@ const initMap = (elementId, center_coordinates) => {
 
 const reverseCoordinates = (coordinates) => {
   return [coordinates[1], coordinates[0]];
-}
+};
+
+const isEqual = (ob1, ob2) => {
+  return _.isEqual(ob1, ob2);
+};
 
 export {
   initMap,
   reverseCoordinates,
+  isEqual,
 };
