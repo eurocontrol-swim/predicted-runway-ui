@@ -14,7 +14,7 @@
               <a class="nav-link dropdown-toggle" href="#" id="airportMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   {{ airportTitle }}
               </a>
-              <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="airportMenu">
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="airportMenu">
                 <li><h6 class="dropdown-header">Runways In Use</h6></li>
                 <li><a class="dropdown-item" data-bs-toggle="modal" href="#rpFormModal"><i class="bi-cpu menu-icon"></i>New prediction</a></li>
                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#runwayModelStatsModal" href="#rpStats"><i class="bi-graph-up menu-icon"></i>Model statistics</a></li>
@@ -28,23 +28,15 @@
         <div class="d-flex">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="newPredictionMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link dropdown-toggle" id="optionsMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Options
               </a>
-              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="newPredictionMenu">
-                <li><h6 class="dropdown-header">Select destination airport</h6></li>
-                <li id="select-airports">
-                  <select class="form-select form-select-sm" aria-label="Default select example"
-                        @change="airportSelected($event)">
-                    <option value=""></option>
-                    <option
-                        v-for="airport in $config.destinationAirports"
-                        :key="airport.icao"
-                        :label="getAirportSelectLabel(airport)"
-                        :value="airport.icao"
-                    >
-                    </option>
-                  </select>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="optionsMenu">
+                <li><h6 class="dropdown-header">Destination airports</h6></li>
+                <li v-for="airport in $config.destinationAirports"
+                    :key="airport.icao"
+                >
+                  <a class="dropdown-item destination-airport" @click="airportSelected(airport)">{{ getAirportSelectLabel(airport) }}</a>
                 </li>
                 <li><hr class="dropdown-divider"></li>
                 <li><h6 class="dropdown-header">Misc</h6></li>
@@ -70,9 +62,8 @@ export default {
     getAirportSelectLabel(airport) {
       return `${airport.icao} | ${airport.name}`;
     },
-    airportSelected(event) {
-      const icao = event.target.value;
-      this.$router.push({ name: 'Arrivals', params: { destinationIcao: icao } });
+    airportSelected(airport) {
+      this.$router.push({ name: 'Arrivals', params: { destinationIcao: airport.icao } });
     },
   },
   computed: {
@@ -93,20 +84,12 @@ export default {
 </script>
 
 <style scoped>
-  select {
-    background-color: #566370;
-    color: whitesmoke;
-  }
-
-  select > option {
-    color: white;
-  }
   .menu-icon {
     margin-right: 10px;
   }
-  #select-airports {
-    margin-left: 10px;
-    margin-right: 10px;
+
+  .destination-airport {
+    cursor: pointer;
   }
 
   .material-symbols-outlined {

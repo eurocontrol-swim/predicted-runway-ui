@@ -1,7 +1,9 @@
 
 <template>
   <div>
-    <NavBar></NavBar>
+    <NavBar
+      :key="$route.fullPath"
+    ></NavBar>
     <main class="flex-shrink-0">
       <div class="container">
         <router-view
