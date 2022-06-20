@@ -11,9 +11,9 @@ import router from './router'
 const emitter = mitt();
 
 const app = createApp(App)
-app.use(router)
 
 app.config.globalProperties.$config = AppConfig;
 app.config.globalProperties.$emitter = emitter;
 
+app.use(router)
 app.mount('#app')

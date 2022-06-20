@@ -19,7 +19,7 @@
                 <li><a class="dropdown-item" data-bs-toggle="modal" href="#rpFormModal"><i class="bi-cpu menu-icon"></i>New prediction</a></li>
                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#runwayModelStatsModal" href="#rpStats"><i class="bi-graph-up menu-icon"></i>Model statistics</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><h6 class="dropdown-header">Runways Configuration</h6></li>
+                <li><h6 class="dropdown-header">Runways' Configuration</h6></li>
                 <li><a class="dropdown-item" data-bs-toggle="modal" href="#rcpFormModal"><i class="bi-cpu menu-icon"></i>New prediction</a></li>
                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#runwayConfigModelStatsModal" href="#rcpStats"><i class="bi-graph-up menu-icon"></i>Model statistics</a></li>
               </ul>
@@ -84,9 +84,6 @@ export default {
 </script>
 
 <style scoped>
-  .menu-icon {
-    margin-right: 10px;
-  }
 
   .destination-airport {
     cursor: pointer;
