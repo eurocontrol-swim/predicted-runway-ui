@@ -16,13 +16,13 @@
         </div>
         <ul class="list-group list-group-flush">
           <li class="list-group-item">
-          <p class="card-text">Runways in Use</p>
+          <p class="card-text">Runway in Use</p>
           <a data-bs-toggle="modal" href="#rpFormModal" class="btn btn-primary align-items-center menu-icon"><i class="bi-cpu menu-icon"></i><span>New prediction</span></a>
           <a data-bs-toggle="modal" href="#runwayModelStatsModal" class="btn btn-primary align-items-center menu-icon"><i class="bi-graph-up menu-icon"></i><span>Model statistics</span></a>
 
           </li>
           <li class="list-group-item">
-          <p class="card-text mt-0">Runways' Configuration</p>
+          <p class="card-text mt-0">Runway Configuration</p>
           <a data-bs-toggle="modal" href="#rcpFormModal" class="btn btn-primary align-items-center menu-icon"><i class="bi-cpu menu-icon"></i><span>New prediction</span></a>
           <a data-bs-toggle="modal" href="#runwayConfigModelStatsModal" class="btn btn-primary align-items-center menu-icon"><i class="bi-graph-up menu-icon"></i><span>Model statistics</span></a>
           </li>
