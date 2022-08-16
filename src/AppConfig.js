@@ -31,6 +31,11 @@ AppConfig.destinationAirports = [
         name: 'Vienna International Airport',
         coordinates: [16.5697002411, 48.1102981567],
     },
+    {
+        icao: 'ESPA',
+        name: 'Lulea Airport',
+        coordinates: [22.1219997406, 65.543800354],
+    },
 ]
 AppConfig.getAirportData = (airportIcao) => {
     const [airportData] = AppConfig.destinationAirports.filter((airport) => airport.icao === airportIcao)
