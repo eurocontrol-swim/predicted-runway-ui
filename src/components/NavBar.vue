@@ -16,12 +16,12 @@
               </a>
               <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="airportMenu">
                 <li><h6 class="dropdown-header">Runway in Use</h6></li>
-                <li><a class="dropdown-item" data-bs-toggle="modal" href="#rpFormModal"><i class="bi-cpu menu-icon"></i>New prediction</a></li>
-                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#runwayModelStatsModal" href="#rpStats"><i class="bi-graph-up menu-icon"></i>Model statistics</a></li>
+                <li><a :class="runwayDropdownItemClass" data-bs-toggle="modal" href="#rpFormModal"><i class="bi-cpu menu-icon"></i>New prediction</a></li>
+                <li><a :class="runwayDropdownItemClass" data-bs-toggle="modal" data-bs-target="#runwayModelStatsModal" href="#rpStats"><i class="bi-graph-up menu-icon"></i>Model statistics</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><h6 class="dropdown-header">Runway Configuration</h6></li>
-                <li><a class="dropdown-item" data-bs-toggle="modal" href="#rcpFormModal"><i class="bi-cpu menu-icon"></i>New prediction</a></li>
-                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#runwayConfigModelStatsModal" href="#rcpStats"><i class="bi-graph-up menu-icon"></i>Model statistics</a></li>
+                <li><a :class="runwayConfigDropdownItemClass" data-bs-toggle="modal" href="#rcpFormModal"><i class="bi-cpu menu-icon"></i>New prediction</a></li>
+                <li><a :class="runwayConfigDropdownItemClass" data-bs-toggle="modal" data-bs-target="#runwayConfigModelStatsModal" href="#rcpStats"><i class="bi-graph-up menu-icon"></i>Model statistics</a></li>
               </ul>
             </li>
           </ul>
@@ -55,6 +55,10 @@ import * as api from "@/common/api";
 
 export default {
   name: "NavBar",
+  data: () => ({
+    dropdownItemClass: 'dropdown-item',
+    airportData: null,
+  }),
   methods: {
     getAirportName(airportIcao) {
       return this.$config.getAirportData(airportIcao)['name'];
@@ -79,7 +83,22 @@ export default {
     openApiUrl() {
       return api.getOpenApiUrl();
     },
+    runwayDropdownItemClass() {
+      const extraClass = this.airportData.models.runway_in_use ? '' : ' disabled';
+
+      return this.dropdownItemClass + extraClass;
+    },
+    runwayConfigDropdownItemClass() {
+      const extraClass = this.airportData.models.runway_config ? '' : ' disabled';
+
+      return this.dropdownItemClass + extraClass;
+    },
   },
+  created() {
+    if (this.$route.params.destinationIcao) {
+      this.airportData = this.$config.getAirportData(this.$route.params.destinationIcao);
+    }
+  }
 };
 </script>
 

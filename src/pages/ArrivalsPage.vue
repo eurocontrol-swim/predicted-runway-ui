@@ -17,14 +17,14 @@
         <ul class="list-group list-group-flush">
           <li class="list-group-item">
           <p class="card-text">Runway in Use</p>
-          <a data-bs-toggle="modal" href="#rpFormModal" class="btn btn-primary align-items-center menu-icon"><i class="bi-cpu menu-icon"></i><span>New prediction</span></a>
-          <a data-bs-toggle="modal" href="#runwayModelStatsModal" class="btn btn-primary align-items-center menu-icon"><i class="bi-graph-up menu-icon"></i><span>Model statistics</span></a>
+          <a data-bs-toggle="modal" href="#rpFormModal" :class="runwayModelButtonClass"><i class="bi-cpu menu-icon"></i><span>New prediction</span></a>
+          <a data-bs-toggle="modal" href="#runwayModelStatsModal" :class="runwayModelButtonClass"><i class="bi-graph-up menu-icon"></i><span>Model statistics</span></a>
 
           </li>
           <li class="list-group-item">
           <p class="card-text mt-0">Runway Configuration</p>
-          <a data-bs-toggle="modal" href="#rcpFormModal" class="btn btn-primary align-items-center menu-icon"><i class="bi-cpu menu-icon"></i><span>New prediction</span></a>
-          <a data-bs-toggle="modal" href="#runwayConfigModelStatsModal" class="btn btn-primary align-items-center menu-icon"><i class="bi-graph-up menu-icon"></i><span>Model statistics</span></a>
+          <a data-bs-toggle="modal" href="#rcpFormModal" :class="runwayConfigModelButtonClass"><i class="bi-cpu menu-icon"></i><span>New prediction</span></a>
+          <a data-bs-toggle="modal" href="#runwayConfigModelStatsModal" :class="runwayConfigModelButtonClass"><i class="bi-graph-up menu-icon"></i><span>Model statistics</span></a>
           </li>
         </ul>
       </div>
@@ -58,6 +58,8 @@ export default {
   },
   data: () => ({
     message: '',
+    airportData: null,
+    modalButtonClass: 'btn btn-primary align-items-center menu-icon',
   }),
   methods: {
     onCloseAlert() {
@@ -72,9 +74,21 @@ export default {
       const airportData = this.$config.getAirportData(this.$route.params.destinationIcao);
 
       return `${airportData.icao} | ${airportData.name}`;
-    }
+    },
+    runwayModelButtonClass() {
+      const extraClass = this.airportData.models.runway_in_use ? '' : ' disabled';
+
+      return this.modalButtonClass + extraClass;
+    },
+    runwayConfigModelButtonClass() {
+      const extraClass = this.airportData.models.runway_config ? '' : ' disabled';
+
+      return this.modalButtonClass + extraClass;
+    },
   },
   created() {
+    this.airportData = this.$config.getAirportData(this.$route.params.destinationIcao);
+
     this.$emitter.on('pr-alert', (message) => {
       this.message = message;
     });
