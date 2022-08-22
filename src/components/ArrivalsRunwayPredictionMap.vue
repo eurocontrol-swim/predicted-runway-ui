@@ -87,7 +87,7 @@ export default {
     },
     init() {
       const [airport] = this.$config.destinationAirports.filter((a) => a.icao === this.$route.params.destinationIcao);
-      this.map = utils.initMap('rpMap', utils.reverseCoordinates(airport.coordinates));
+      this.map = utils.initMap('rpMap', [airport.lat, airport.lon]);
 
       const self = this;
       this.map.on('zoomend', () => {

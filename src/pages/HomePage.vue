@@ -56,14 +56,10 @@ export default {
   },
   data: () => ({
   }),
-  methods: {
-  },
   computed: {
     canShowCards() {
       return utils.isEqual(this.$route.params, {}) && utils.isEqual(this.$route.query, {});
     },
-  },
-  created() {
   },
 };
 </script>

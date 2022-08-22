@@ -86,6 +86,8 @@ const getOpenApiUrl = () => {
   return `${config.baseURL}/ui/`;
 }
 
+const getConfig = () => axios.get(`/config`, config);
+
 export {
   getAirportsData,
   getLastTafEndTime,
@@ -96,4 +98,5 @@ export {
   getRunwayPrediction,
   getRunwayConfigPrediction,
   getOpenApiUrl,
+  getConfig,
 };
