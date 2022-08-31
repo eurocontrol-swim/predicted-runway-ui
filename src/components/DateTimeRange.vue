@@ -1,75 +1,77 @@
 <template>
   <div>
     <label for="dateTimeRange" class="form-label">Arriving at</label>
-    <input type="range" class="form-range" min="0" :max="maxTimeRange" id="dateTimeRange" v-model="timeRange" @change="onDateTimeChange()">
+    <input
+        type="range"
+        class="form-range"
+        id="dateTimeRange"
+        min="0"
+        :max="maxTimeRange"
+        :value="selectedTimeRange"
+        @change="onDateTimeChange($event)"
+    >
     <span><strong>{{ dateTimeText }}</strong></span>
   </div>
 </template>
 
 <script>
-import moment from "moment";
 
 export default {
   name: "DateTimeRange",
   props: {
+    startTimestamp: Number,
     endTimestamp: Number,
+    preSelectedTimestamp: {
+      type: Number,
+      required: false,
+    }
   },
   data: () => ({
     maxTimeRange: 0,
-    timeRange: 0,
-    startTimestamp: null,
+    selectedTimeRange: 0,
+    dateTimeText: null,
   }),
   methods: {
-    handleForecastEndTime(endTimestamp) {
-      const startDatetime = moment().utc();
-      startDatetime.set('minutes', 0);
-      startDatetime.set('seconds', 0);
-
-      this.startTimestamp = startDatetime.unix();
+    setMaxTimeRange(endTimestamp) {
       this.maxTimeRange = Math.floor(((endTimestamp - this.startTimestamp) / 3600));
     },
-    onDateTimeChange() {
-      this.$emit('datetime-change', this.timestamp);
+    setSelectedTimeRange(preSelectedTimestamp) {
+      this.selectedTimeRange = Math.floor(((preSelectedTimestamp - this.startTimestamp) / 3600));
+    },
+    setDateTimeText(timestamp) {
+      this.dateTimeText = this.formatDate(new Date(timestamp * 1000))
+    },
+    onDateTimeChange(event) {
+      this.selectedTimeRange = event.target.value;
+      const timestamp = this.startTimestamp + (3600 * this.selectedTimeRange);
+
+      this.setDateTimeText(timestamp);
+      this.$emit('datetime-change', timestamp);
     },
     formatDate(d) {
       return d.toUTCString().replace('GMT', 'UTC');
     },
     reset() {
-      this.startTimestamp = null;
       this.maxTimeRange = 0;
-      this.timeRange = 0;
-    },
-  },
-  computed: {
-    timestamp() {
-      if (!this.startTimestamp) {
-        return;
-      }
-
-      return this.startTimestamp + (3600 * this.timeRange);
-    },
-    dateTimeText() {
-      if (!this.timestamp) {
-        return;
-      }
-      const timestamp = this.startTimestamp + (3600 * this.timeRange)
-
-      return this.formatDate(new Date(timestamp * 1000))
+      this.selectedTimeRange = 0;
     },
   },
   watch: {
-    startTimestamp(val) {
-      if (val) {
-        this.$emit('datetime-change', val);
-      }
-    },
     endTimestamp(val) {
       if (val) {
-        this.handleForecastEndTime(val);
-      } else {
-        this.reset();
+        this.setMaxTimeRange(val);
+        this.setSelectedTimeRange(this.startTimestamp);
+        this.setDateTimeText(this.startTimestamp);
       }
-    }
+    },
+    preSelectedTimestamp(val) {
+      if (val) {
+        this.setSelectedTimeRange(val);
+        this.setDateTimeText(val);
+      }
+    },
+  },
+  created() {
   }
 };
 </script>

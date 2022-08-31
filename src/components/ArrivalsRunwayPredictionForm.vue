@@ -39,6 +39,7 @@
             <div class="mb-3">
               <DateTimeRange
                 key="runwayPredict"
+                :startTimestamp="startTimestamp"
                 :endTimestamp="endTimestamp"
                 @datetime-change="onDateTimeChange($event)"
               >
@@ -70,6 +71,7 @@ import ErrorHandler from '@/mixins/ErrorHandler.vue';
 import RouteHandler from '@/mixins/RouteHandler.vue';
 import ErrorMessage from "@/components/ErrorMessage";
 import {Modal} from 'bootstrap';
+import * as utils from "@/common/utils";
 
 export default {
   name: "ArrivalsRunwayPredictionForm",
@@ -85,6 +87,7 @@ export default {
     airports: [],
     originAirport: null,
     timestamp: null,
+    startTimestamp: null,
     endTimestamp: null,
     modal: null,
     formErrorMessage: null,
@@ -96,7 +99,10 @@ export default {
       this.endTimestamp = null;
       this.formErrorMessage = null;
     },
-    getLastTafEndTime(airportIcao) {
+    initTimestamps(airportIcao) {
+      this.startTimestamp = utils.getCurrentUTCTimestamp();
+      this.timestamp = this.startTimestamp;
+
       api.getLastTafEndTime(airportIcao)
         .then((res) => {
           this.endTimestamp = res.data.end_timestamp;
@@ -193,7 +199,7 @@ export default {
 
     const self = this;
     this.$refs.rpFormModal.addEventListener('show.bs.modal', function () {
-      self.getLastTafEndTime(self.$route.params.destinationIcao);
+      self.initTimestamps(self.$route.params.destinationIcao);
     });
     this.$refs.rpFormModal.addEventListener('hide.bs.modal', function () {
       self.resetForm();

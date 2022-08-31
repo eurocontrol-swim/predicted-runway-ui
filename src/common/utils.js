@@ -1,5 +1,6 @@
 import L from "leaflet";
 import _ from "lodash";
+import moment from "moment";
 
 const initMap = (elementId, center_coordinates) => {
   const map = L.map(elementId);
@@ -38,8 +39,17 @@ const isEqual = (ob1, ob2) => {
   return _.isEqual(ob1, ob2);
 };
 
+const getCurrentUTCTimestamp = () => {
+  const startDatetime = moment().utc();
+  startDatetime.set('minutes', 0);
+  startDatetime.set('seconds', 0);
+
+  return startDatetime.unix();
+};
+
 export {
   initMap,
   reverseCoordinates,
   isEqual,
+  getCurrentUTCTimestamp,
 };

@@ -30,7 +30,8 @@
       </div>
     </div>
   </div>
-  <router-view></router-view>
+  <router-view
+  ></router-view>
 
   <ArrivalsRunwayPredictionForm></ArrivalsRunwayPredictionForm>
   <ArrivalsRunwayConfigPredictionForm></ArrivalsRunwayConfigPredictionForm>

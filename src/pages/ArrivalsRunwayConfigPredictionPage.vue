@@ -95,7 +95,16 @@
             </div>
         </div>
       </div>
-      <div class="p-2  map-area">
+      <div class="p-2">
+        <DateTimeRange
+          :preSelectedTimestamp="selectedTimestamp"
+          :startTimestamp="startTimestamp"
+          :endTimestamp="endTimestamp"
+          @datetime-change="onDateTimeChange($event)"
+        >
+        </DateTimeRange>
+      </div>
+      <div class="p-2 map-area">
         <ArrivalsRunwayConfigPredictionMap
           :selectedConfigRowIndex="selectedConfigRowIndex"
           :result="result"
@@ -107,13 +116,16 @@
 
 <script>
 import * as api from "@/common/api";
+import * as utils from "@/common/utils";
 import ArrivalsRunwayConfigPredictionMap from "@/components/ArrivalsRunwayConfigPredictionMap";
+import DateTimeRange from "@/components/DateTimeRange";
 import ErrorHandler from "@/mixins/ErrorHandler";
 
 export default {
   name: "ArrivalsRunwayConfigPredictionPage",
   components: {
     ArrivalsRunwayConfigPredictionMap,
+    DateTimeRange,
   },
   mixins: [
     ErrorHandler,
@@ -121,6 +133,9 @@ export default {
   data: () => ({
     result: null,
     selectedConfigRowIndex: null,
+    startTimestamp: null,
+    endTimestamp: null,
+    selectedTimestamp: null,
   }),
   methods: {
     getPredictionResult() {
@@ -135,6 +150,7 @@ export default {
       api.getRunwayConfigPrediction(input)
         .then((res) => {
           this.result = res.data;
+          this.selectedTimestamp = parseInt(this.$route.query.timestamp);
         })
         .catch((error) => {
           this.handleApiError({error})
@@ -158,7 +174,46 @@ export default {
     getRowStyle(index) {
       const bgcolor = index === 0 ? '#e7f1ff' : '#ffffff';
       return `background-color: ${bgcolor}`;
-    }
+    },
+    onDateTimeChange(timestamp) {
+      this.selectedTimestamp = timestamp;
+      this.getPrediction();
+    },
+    initTimestamps(airportIcao) {
+      this.selectedTimestamp = parseInt(this.$route.query.timestamp);
+      this.startTimestamp = utils.getCurrentUTCTimestamp();
+      if (this.startTimestamp > this.selectedTimestamp) {
+        this.startTimestamp = this.selectedTimestamp;
+      }
+
+      api.getLastTafEndTime(airportIcao)
+        .then((res) => {
+          this.endTimestamp = res.data.end_timestamp;
+        })
+        .catch((error) => {
+          this.handleFormError({error});
+        });
+    },
+    getPrediction() {
+      const data = {
+        destinationIcao: this.$route.params.destinationIcao,
+        timestamp: this.selectedTimestamp,
+      };
+
+      api.createRunwayConfigPredictionInput(data)
+        .then((res) => {
+          const query = {
+            timestamp: res.data.timestamp.toString(),
+            wind_direction: res.data.wind_direction.toString(),
+            wind_speed: res.data.wind_speed.toString(),
+            wind_input_source: res.data.wind_input_source,
+          };
+          this.$router.push({ query });
+        })
+        .catch(() => {
+          // this.handleApiError({error});
+        })
+    },
   },
   computed: {
     predictionOutput() {
@@ -184,6 +239,7 @@ export default {
   },
   created() {
     this.getPredictionResult();
+    this.initTimestamps(this.$route.params.destinationIcao);
   }
 };
 </script>
