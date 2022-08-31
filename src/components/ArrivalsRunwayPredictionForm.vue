@@ -1,50 +1,47 @@
 <template>
-
   <div class="modal fade" id="rpFormModal" aria-hidden="true" aria-labelledby="rpFormModal" tabindex="-1" ref="rpFormModal">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">{{ $route.params.destinationIcao }} | Runway in Use | New prediction</h5>
+          <h5 class="modal-title">{{ getDestinationIcao() }} | Runway in Use | New prediction</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form class="needs-validation" ref="rpForm" novalidate>
           <div class="modal-body">
             <div class="form-group">
-            <div class="mb-3">
-
-              <label for="rpOriginAirportOptions" class="form-label">Departing from</label>
-              <input autoComplete="off"
-                     class="form-control"
-                     list="rpOriginAirportOptions"
-                     id="rpOriginIcaoListItem"
-                     placeholder="Type to search"
-                     v-model="originAirport"
-                     @keyup="updateOriginAirports()"
-                     required
-              >
-              <div class="invalid-feedback">
-                Please choose an origin airport.
-              </div>
-
-              <datalist id="rpOriginAirportOptions">
-                <option
-                    v-for="airport in airports"
-                    :key="airport.icao"
-                    :label="airport.title"
-                    :value="airport.title"
+              <div class="mb-3">
+                <label for="rpOriginAirportOptions" class="form-label">Departing from</label>
+                <input autoComplete="off"
+                       class="form-control"
+                       list="rpOriginAirportOptions"
+                       id="rpOriginIcaoListItem"
+                       placeholder="Type to search"
+                       v-model="originAirport"
+                       @keyup="updateOriginAirports()"
+                       required
                 >
-                </option>
-              </datalist>
-            </div>
-            <div class="mb-3">
-              <DateTimeRange
-                key="runwayPredict"
-                :startTimestamp="startTimestamp"
-                :endTimestamp="endTimestamp"
-                @datetime-change="onDateTimeChange($event)"
-              >
-              </DateTimeRange>
-            </div>
+                <div class="invalid-feedback">
+                  Please choose an origin airport.
+                </div>
+                <datalist id="rpOriginAirportOptions">
+                  <option
+                      v-for="airport in airports"
+                      :key="airport.icao"
+                      :label="airport.title"
+                      :value="airport.title"
+                  >
+                  </option>
+                </datalist>
+              </div>
+              <div class="mb-3">
+                <DateTimeRange
+                  key="runwayPredict"
+                  :startTimestamp="startTimestamp"
+                  :endTimestamp="endTimestamp"
+                  @datetime-change="onDateTimeChange($event)"
+                >
+                </DateTimeRange>
+              </div>
             </div>
             <div class="mb-3" v-if="formErrorMessage">
               <ErrorMessage
@@ -65,13 +62,13 @@
 </template>
 
 <script>
+import {Modal} from 'bootstrap';
 import * as api from '@/common/api';
-import DateTimeRange from '@/components/DateTimeRange.vue';
+import * as utils from "@/common/utils";
 import ErrorHandler from '@/mixins/ErrorHandler.vue';
 import RouteHandler from '@/mixins/RouteHandler.vue';
+import DateTimeRange from '@/components/DateTimeRange.vue';
 import ErrorMessage from "@/components/ErrorMessage";
-import {Modal} from 'bootstrap';
-import * as utils from "@/common/utils";
 
 export default {
   name: "ArrivalsRunwayPredictionForm",
@@ -83,6 +80,9 @@ export default {
     ErrorHandler,
     RouteHandler
   ],
+  props: {
+    destinationIcao: String,
+  },
   data: () => ({
     airports: [],
     originAirport: null,
@@ -118,7 +118,7 @@ export default {
       }
 
       const data = {
-        destinationIcao: this.$route.params.destinationIcao,
+        destinationIcao: this.getDestinationIcao(),
         originIcao: this.originIcao,
         timestamp: this.timestamp,
       };
@@ -136,7 +136,7 @@ export default {
           this.modal.hide();
           this.goToPage({
             name: 'ArrivalsRunwayPrediction',
-            params: this.$route.params,
+            params: {destinationIcao: this.getDestinationIcao()},
             query
           });
         })
@@ -172,6 +172,9 @@ export default {
         this.formErrorMessage = error.response.data.detail;
       }
     },
+    getDestinationIcao() {
+      return this.$route.params.destinationIcao || this.destinationIcao;
+    },
   },
   computed: {
     originIcao() {
@@ -199,7 +202,7 @@ export default {
 
     const self = this;
     this.$refs.rpFormModal.addEventListener('show.bs.modal', function () {
-      self.initTimestamps(self.$route.params.destinationIcao);
+      self.initTimestamps(self.getDestinationIcao());
     });
     this.$refs.rpFormModal.addEventListener('hide.bs.modal', function () {
       self.resetForm();

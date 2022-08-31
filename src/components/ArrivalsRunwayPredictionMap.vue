@@ -113,8 +113,6 @@ export default {
         return;
       }
 
-      // this.init();
-
       this.render();
     },
   },

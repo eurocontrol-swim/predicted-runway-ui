@@ -4,7 +4,7 @@
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">{{ $route.params.destinationIcao }} | Runway Configuration | New prediction</h5>
+          <h5 class="modal-title">{{ getDestinationIcao() }} | Runway Configuration | New prediction</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form>
@@ -35,17 +35,16 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
-import * as api from '@/common/api';
-import ErrorHandler from '@/mixins/ErrorHandler.vue';
-import ErrorMessage from "@/components/ErrorMessage";
-import RouteHandler from '@/mixins/RouteHandler.vue';
-import DateTimeRange from '@/components/DateTimeRange.vue';
 import {Modal} from 'bootstrap';
+import * as api from '@/common/api';
 import * as utils from "@/common/utils";
+import ErrorHandler from '@/mixins/ErrorHandler.vue';
+import RouteHandler from '@/mixins/RouteHandler.vue';
+import ErrorMessage from "@/components/ErrorMessage";
+import DateTimeRange from '@/components/DateTimeRange.vue';
 
 export default {
   name: "ArrivalsRunwayConfigPredictionForm",
@@ -57,6 +56,9 @@ export default {
     ErrorHandler,
     RouteHandler,
   ],
+  props: {
+    destinationIcao: String,
+  },
   data: () => ({
     timestamp: null,
     startTimestamp: null,
@@ -83,7 +85,7 @@ export default {
     },
     submitForm() {
       const data = {
-        destinationIcao: this.$route.params.destinationIcao,
+        destinationIcao: this.getDestinationIcao(),
         timestamp: this.timestamp,
       };
 
@@ -99,7 +101,7 @@ export default {
           this.modal.hide();
           this.goToPage({
             name: 'ArrivalsRunwayConfigPrediction',
-            params: this.$route.params,
+            params: {destinationIcao: this.getDestinationIcao()},
             query
           });
         })
@@ -121,6 +123,9 @@ export default {
         this.formErrorMessage = error.response.data.detail;
       }
     },
+    getDestinationIcao() {
+      return this.$route.params.destinationIcao || this.destinationIcao;
+    },
   },
   computed: {
     hasErrors() {
@@ -141,7 +146,7 @@ export default {
 
     const self = this;
     this.$refs.rcpFormModal.addEventListener('show.bs.modal', function () {
-      self.initTimestamps(self.$route.params.destinationIcao);
+      self.initTimestamps(self.getDestinationIcao());
     });
     this.$refs.rcpFormModal.addEventListener('hide.bs.modal', function () {
       self.resetForm();

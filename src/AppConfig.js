@@ -24,8 +24,14 @@ AppConfig.serverApi = {
 */
 AppConfig.destinationAirports = [];
 
-AppConfig.getAirportData = (airportIcao) => {
+AppConfig.getAirportDataByIcao = (airportIcao) => {
     const [airportData] = AppConfig.destinationAirports.filter((airport) => airport.icao === airportIcao)
+
+    return airportData;
+}
+
+AppConfig.getAirportDataByName = (airportName) => {
+    const [airportData] = AppConfig.destinationAirports.filter((airport) => airport.name === airportName)
 
     return airportData;
 }

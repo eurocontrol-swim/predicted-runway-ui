@@ -33,17 +33,12 @@
   <router-view
   ></router-view>
 
-  <ArrivalsRunwayPredictionForm></ArrivalsRunwayPredictionForm>
-  <ArrivalsRunwayConfigPredictionForm></ArrivalsRunwayConfigPredictionForm>
-
   <ArrivalsRunwayPredictionStats></ArrivalsRunwayPredictionStats>
   <ArrivalsRunwayConfigPredictionStats></ArrivalsRunwayConfigPredictionStats>
 </template>
 
 <script>
 import * as utils from "@/common/utils";
-import ArrivalsRunwayPredictionForm from '@/components/ArrivalsRunwayPredictionForm.vue';
-import ArrivalsRunwayConfigPredictionForm from '@/components/ArrivalsRunwayConfigPredictionForm.vue';
 import ArrivalsRunwayPredictionStats from "@/components/ArrivalsRunwayPredictionStats";
 import ArrivalsRunwayConfigPredictionStats from "@/components/ArrivalsRunwayConfigPredictionStats";
 import AlertNotification from "@/components/AlertNotification";
@@ -52,8 +47,6 @@ export default {
   name: "ArrivalsPage",
   components: {
     AlertNotification,
-    ArrivalsRunwayPredictionForm,
-    ArrivalsRunwayConfigPredictionForm,
     ArrivalsRunwayPredictionStats,
     ArrivalsRunwayConfigPredictionStats,
   },
@@ -72,7 +65,7 @@ export default {
       return utils.isEqual(this.$route.query, {});
     },
     destinationAirport() {
-      const airportData = this.$config.getAirportData(this.$route.params.destinationIcao);
+      const airportData = this.$config.getAirportDataByIcao(this.$route.params.destinationIcao);
 
       return `${airportData.icao} | ${airportData.name}`;
     },
@@ -88,7 +81,7 @@ export default {
     },
   },
   created() {
-    this.airportData = this.$config.getAirportData(this.$route.params.destinationIcao);
+    this.airportData = this.$config.getAirportDataByIcao(this.$route.params.destinationIcao);
 
     this.$emitter.on('pr-alert', (message) => {
       this.message = message;
