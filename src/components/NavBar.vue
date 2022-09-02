@@ -33,10 +33,21 @@
               </a>
               <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="optionsMenu">
                 <li><h6 class="dropdown-header">Destination airports</h6></li>
-                <li v-for="airport in $config.destinationAirports"
-                    :key="airport.icao"
+                <li class="destination-airports-list-item">
+                <input
+                  id="airportsList"
+                  class="form-control airports-list"
+                  list="airportsListOptions"
+                  placeholder="Type to search..."
+                  @input="onAirportSelected($event)"
                 >
-                  <a class="dropdown-item destination-airport" @click="airportSelected(airport)">{{ getAirportSelectLabel(airport) }}</a>
+                <datalist id="airportsListOptions">
+                  <option
+                    v-for="airport in $config.destinationAirports"
+                    :key="airport.icao"
+                    :value="airport.name"
+                  ></option>
+                </datalist>
                 </li>
                 <li><hr class="dropdown-divider"></li>
                 <li><h6 class="dropdown-header">Misc</h6></li>
@@ -61,13 +72,12 @@ export default {
   }),
   methods: {
     getAirportName(airportIcao) {
-      return this.$config.getAirportData(airportIcao)['name'];
+      return this.$config.getAirportDataByIcao(airportIcao)['name'];
     },
-    getAirportSelectLabel(airport) {
-      return `${airport.icao} | ${airport.name}`;
-    },
-    airportSelected(airport) {
-      this.$router.push({ name: 'Arrivals', params: { destinationIcao: airport.icao } });
+    onAirportSelected(event) {
+      const airportData = this.$config.getAirportDataByName(event.target.value);
+
+      this.$router.push({ name: 'Arrivals', params: { destinationIcao: airportData.icao } });
     },
   },
   computed: {
@@ -96,7 +106,7 @@ export default {
   },
   created() {
     if (this.$route.params.destinationIcao) {
-      this.airportData = this.$config.getAirportData(this.$route.params.destinationIcao);
+      this.airportData = this.$config.getAirportDataByIcao(this.$route.params.destinationIcao);
     }
   }
 };
@@ -104,15 +114,20 @@ export default {
 
 <style scoped>
 
-  .destination-airport {
-    cursor: pointer;
-  }
-
   .material-symbols-outlined {
     font-variation-settings:
     'FILL' 0,
     'wght' 200,
     'GRAD' 0,
     'opsz' 48
+  }
+
+  .airports-list {
+    width: auto;
+  }
+
+  .destination-airports-list-item {
+    margin-left: 10px;
+    margin-right: 10px;
   }
 </style>
