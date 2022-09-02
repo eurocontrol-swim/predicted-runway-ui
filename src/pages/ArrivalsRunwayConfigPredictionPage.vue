@@ -7,9 +7,9 @@
                   <button class="accordion-button"
                           type="button"
                           data-bs-toggle="collapse"
-                          data-bs-target="#collapseOne"
+                          data-bs-target="#input-output-collapse"
                           aria-expanded="false"
-                          aria-controls="collapseOne"
+                          aria-controls="input-output-collapse"
                   >
                       <span>
                           <strong>Runway Configuration Prediction</strong> |
@@ -17,7 +17,7 @@
                       </span>
                   </button>
                 </h2>
-                <div id="collapseOne" class="accordion-collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div id="input-output-collapse" class="accordion-collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                   <div class="accordion-body">
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                       <li class="nav-item" role="presentation">
@@ -249,5 +249,9 @@ export default {
   .table-hover tbody tr:hover td {
     background-color: #e7f1ff;
     cursor: pointer;
+  }
+
+  #input-output-collapse {
+    height: 400px;
   }
 </style>
