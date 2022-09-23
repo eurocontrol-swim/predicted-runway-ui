@@ -104,4 +104,8 @@ export default {
   .menu-icon {
     margin-right: 10px;
   }
+
+  .btn {
+    border-radius: 0;
+  }
 </style>
