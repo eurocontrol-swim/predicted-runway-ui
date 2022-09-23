@@ -31,14 +31,17 @@
               <a class="nav-link dropdown-toggle" id="optionsMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Options
               </a>
-              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="optionsMenu">
+              <ul
+                class="dropdown-menu dropdown-menu-end dropdown-menu-dark"
+                aria-labelledby="optionsMenu"
+              >
                 <li><h6 class="dropdown-header">Destination airports</h6></li>
                 <li class="destination-airports-list-item">
                   <AirportsDropdownList
                     :airports="$config.destinationAirports"
                     width="auto"
                     @selected-airport="onSelectedAirport($event)"
-                    v-model="airportData"
+                    v-model="airport"
                   >
                   </AirportsDropdownList>
                 </li>
@@ -65,43 +68,34 @@ export default {
   },
   data: () => ({
     dropdownItemClass: 'dropdown-item',
-    airportData: null,
+    airport: null,
   }),
   methods: {
-    getAirportName(airportIcao) {
-      return this.$config.getAirportDataByIcao(airportIcao)['name'];
-    },
     onSelectedAirport(airport) {
       this.$router.push({ name: 'Arrivals', params: { destinationIcao: airport.icao } });
     },
   },
   computed: {
     airportTitle() {
-      const destinationIcao = this.$route.params.destinationIcao;
-
-      if (!destinationIcao) {
-        return '';
-      }
-
-      return `${destinationIcao} | ${this.getAirportName(destinationIcao)}`
+      return this.$config.getDestinationAirportByIcao(this.$route.params.destinationIcao).title;
     },
     openApiUrl() {
       return api.getOpenApiUrl();
     },
     runwayDropdownItemClass() {
-      const extraClass = this.airportData && this.airportData.models.runway_in_use ? '' : ' disabled';
+      const extraClass = this.airport && this.airport.models.runway_in_use ? '' : ' disabled';
 
       return this.dropdownItemClass + extraClass;
     },
     runwayConfigDropdownItemClass() {
-      const extraClass = this.airportData && this.airportData.models.runway_config ? '' : ' disabled';
+      const extraClass = this.airport && this.airport.models.runway_config ? '' : ' disabled';
 
       return this.dropdownItemClass + extraClass;
     },
   },
   created() {
     if (this.$route.params.destinationIcao) {
-      this.airportData = this.$config.getAirportDataByIcao(this.$route.params.destinationIcao);
+      this.airport = this.$config.getDestinationAirportByIcao(this.$route.params.destinationIcao);
     }
   }
 };

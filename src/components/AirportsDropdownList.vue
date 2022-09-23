@@ -12,7 +12,7 @@
       <option
         v-for="airport in airports"
         :key="airport.icao"
-        :value="getAirportOptionValue(airport)"
+        :value="airport.title"
       ></option>
     </datalist>
   </div>
@@ -34,12 +34,7 @@ export default {
   }),
   methods: {
     getAirportDataByInput(event) {
-      const airportName = event.target.value.split('| ')[1];
-
-      return this.$config.getAirportDataByName(airportName);
-    },
-    getAirportOptionValue(airport) {
-      return `${airport.icao} | ${airport.name}`;
+      return this.$config.getDestinationAirportByTitle(event.target.value);
     },
   },
   computed: {

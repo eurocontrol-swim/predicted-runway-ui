@@ -14,7 +14,6 @@
                 <AirportsDropdownList
                     :airports="$config.destinationAirports"
                     @selected-airport="onSelectedAirport($event)"
-                    v-model="airportData"
                   >
                 </AirportsDropdownList>
                 <div class="row-cols-md-1">

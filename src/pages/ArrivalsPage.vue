@@ -65,7 +65,7 @@ export default {
       return utils.isEqual(this.$route.query, {});
     },
     destinationAirport() {
-      const airportData = this.$config.getAirportDataByIcao(this.$route.params.destinationIcao);
+      const airportData = this.$config.getDestinationAirportByIcao(this.$route.params.destinationIcao);
 
       return `${airportData.icao} | ${airportData.name}`;
     },
@@ -81,7 +81,7 @@ export default {
     },
   },
   created() {
-    this.airportData = this.$config.getAirportDataByIcao(this.$route.params.destinationIcao);
+    this.airportData = this.$config.getDestinationAirportByIcao(this.$route.params.destinationIcao);
 
     this.$emitter.on('pr-alert', (message) => {
       this.message = message;

@@ -6,6 +6,7 @@ import mitt from 'mitt';
 
 import * as api from './common/api'
 import AppConfig from './AppConfig.js'
+import {AirportFactory} from "@/models/factory";
 import App from './App.vue'
 import router from './router'
 
@@ -21,7 +22,7 @@ app.use(router)
 // delay app start until server config is retrieved
 api.getConfig()
   .then((res) => {
-    app.config.globalProperties.$config.destinationAirports = res.data;
+    app.config.globalProperties.$config.destinationAirports = res.data.map(AirportFactory.fromServer);
     app.mount('#app');
   })
   .catch((error) => {

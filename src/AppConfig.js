@@ -24,16 +24,22 @@ AppConfig.serverApi = {
 */
 AppConfig.destinationAirports = [];
 
-AppConfig.getAirportDataByIcao = (airportIcao) => {
-    const [airportData] = AppConfig.destinationAirports.filter((airport) => airport.icao === airportIcao)
+AppConfig.getDestinationAirportByIcao = (icao) => {
+  const [airportData] = AppConfig.destinationAirports.filter((airport) => airport.icao === icao)
 
-    return airportData;
+  return airportData;
 }
 
-AppConfig.getAirportDataByName = (airportName) => {
-    const [airportData] = AppConfig.destinationAirports.filter((airport) => airport.name === airportName)
+AppConfig.getDestinationAirportByName = (name) => {
+  const [airportData] = AppConfig.destinationAirports.filter((airport) => airport.name === name)
 
-    return airportData;
+  return airportData;
+}
+
+AppConfig.getDestinationAirportByTitle = (title) => {
+  const name = title.split('|').map((item) => item.trim())[1];
+
+  return AppConfig.getDestinationAirportByName(name);
 }
 
 export { AppConfig as default };
