@@ -34,20 +34,13 @@
               <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="optionsMenu">
                 <li><h6 class="dropdown-header">Destination airports</h6></li>
                 <li class="destination-airports-list-item">
-                <input
-                  id="airportsList"
-                  class="form-control airports-list"
-                  list="airportsListOptions"
-                  placeholder="Type to search..."
-                  @input="onAirportSelected($event)"
-                >
-                <datalist id="airportsListOptions">
-                  <option
-                    v-for="airport in $config.destinationAirports"
-                    :key="airport.icao"
-                    :value="airport.name"
-                  ></option>
-                </datalist>
+                  <AirportsDropdownList
+                    :airports="$config.destinationAirports"
+                    width="auto"
+                    @selected-airport="onSelectedAirport($event)"
+                    v-model="airportData"
+                  >
+                  </AirportsDropdownList>
                 </li>
                 <li><hr class="dropdown-divider"></li>
                 <li><h6 class="dropdown-header">Misc</h6></li>
@@ -63,9 +56,13 @@
 
 <script>
 import * as api from "@/common/api";
+import AirportsDropdownList from "@/components/AirportsDropdownList";
 
 export default {
   name: "NavBar",
+  components: {
+    AirportsDropdownList,
+  },
   data: () => ({
     dropdownItemClass: 'dropdown-item',
     airportData: null,
@@ -74,10 +71,8 @@ export default {
     getAirportName(airportIcao) {
       return this.$config.getAirportDataByIcao(airportIcao)['name'];
     },
-    onAirportSelected(event) {
-      const airportData = this.$config.getAirportDataByName(event.target.value);
-
-      this.$router.push({ name: 'Arrivals', params: { destinationIcao: airportData.icao } });
+    onSelectedAirport(airport) {
+      this.$router.push({ name: 'Arrivals', params: { destinationIcao: airport.icao } });
     },
   },
   computed: {
@@ -94,12 +89,12 @@ export default {
       return api.getOpenApiUrl();
     },
     runwayDropdownItemClass() {
-      const extraClass = this.airportData.models.runway_in_use ? '' : ' disabled';
+      const extraClass = this.airportData && this.airportData.models.runway_in_use ? '' : ' disabled';
 
       return this.dropdownItemClass + extraClass;
     },
     runwayConfigDropdownItemClass() {
-      const extraClass = this.airportData.models.runway_config ? '' : ' disabled';
+      const extraClass = this.airportData && this.airportData.models.runway_config ? '' : ' disabled';
 
       return this.dropdownItemClass + extraClass;
     },
@@ -120,10 +115,6 @@ export default {
     'wght' 200,
     'GRAD' 0,
     'opsz' 48
-  }
-
-  .airports-list {
-    width: auto;
   }
 
   .destination-airports-list-item {

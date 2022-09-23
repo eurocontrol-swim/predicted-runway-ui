@@ -11,21 +11,12 @@
             <div class="card text-center">
               <div class="card-body">
                 <label for="airportsList" class="form-label">Choose a destination airport and predict runways of arrival flights:</label>
-                <input
-                  id="airportsList"
-                  class="form-control"
-                  list="airportsListOptions"
-                  placeholder="Type to search..."
-                  v-model="selectedAirportName"
-                >
-                <datalist id="airportsListOptions">
-                  <option
-                    v-for="airport in $config.destinationAirports"
-                    :key="airport.icao"
+                <AirportsDropdownList
+                    :airports="$config.destinationAirports"
+                    @selected-airport="onSelectedAirport($event)"
+                    v-model="airportData"
                   >
-                    {{ airport.name }}
-                  </option>
-                </datalist>
+                </AirportsDropdownList>
                 <div class="row-cols-md-1">
                   <div>
                     <a :class="rpButtonClass"
@@ -40,8 +31,6 @@
                     >
                       <span class="ms-2">Predict runway configuration</span>
                     </a>
-                  </div>
-                  <div>
                   </div>
                 </div>
               </div>
@@ -66,6 +55,7 @@
 import NavBar from '@/components/NavBar.vue';
 import ArrivalsRunwayPredictionForm from '@/components/ArrivalsRunwayPredictionForm.vue';
 import ArrivalsRunwayConfigPredictionForm from '@/components/ArrivalsRunwayConfigPredictionForm.vue';
+import AirportsDropdownList from "@/components/AirportsDropdownList";
 import * as utils from "@/common/utils";
 
 export default {
@@ -73,27 +63,26 @@ export default {
   components: {
     NavBar,
     ArrivalsRunwayPredictionForm,
-    ArrivalsRunwayConfigPredictionForm
+    ArrivalsRunwayConfigPredictionForm,
+    AirportsDropdownList
   },
   data: () => ({
     selectedAirportName: null,
+    selectedAirport: null,
     buttonClass: 'btn btn-primary align-items-center menu-icon mt-3',
   }),
   methods: {
+    onSelectedAirport(airport) {
+      this.selectedAirport = airport;
+    },
     buttonIsDisabled(type) {
-      if (!this.selectedAirportName) {
+      if (!this.selectedAirport) {
         return true;
       }
 
-      const airportData = this.$config.getAirportDataByName(this.selectedAirportName);
-
-      if (!airportData) {
-        return true;
-      }
-
-      return (type === 'rp' && !airportData.models.runway_in_use)
-          || (type === 'rcp' && !airportData.models.runway_config);
-    }
+      return (type === 'rp' && !this.selectedAirport.models.runway_in_use)
+          || (type === 'rcp' && !this.selectedAirport.models.runway_config);
+    },
   },
   computed: {
     canShowCards() {
@@ -106,18 +95,7 @@ export default {
       return this.buttonClass + (this.buttonIsDisabled('rcp') ? ' disabled' : '');
     },
     selectedAirportICAO() {
-      if (!this.selectedAirportName) {
-        return;
-      }
-      const [airport] = this.$config.destinationAirports.filter(
-          (airport) => airport.name === this.selectedAirportName
-      );
-
-      if (!airport) {
-        return;
-      }
-
-      return airport.icao;
+      return this.selectedAirport ? this.selectedAirport.icao : null;
     }
   },
 };
