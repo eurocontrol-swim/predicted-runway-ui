@@ -41,11 +41,17 @@ export default {
     setDateTimeText(timestamp) {
       this.dateTimeText = this.formatDate(new Date(timestamp * 1000))
     },
+    updateSelectedTimeRange(timestamp) {
+        this.setSelectedTimeRange(timestamp);
+        this.setDateTimeText(timestamp);
+    },
     onDateTimeChange(event) {
       this.selectedTimeRange = event.target.value;
+
       const timestamp = this.startTimestamp + (3600 * this.selectedTimeRange);
 
       this.setDateTimeText(timestamp);
+
       this.$emit('datetime-change', timestamp);
     },
     formatDate(d) {
@@ -57,21 +63,19 @@ export default {
     },
   },
   watch: {
-    endTimestamp(val) {
-      if (val) {
-        this.setMaxTimeRange(val);
-        this.setSelectedTimeRange(this.startTimestamp);
-        this.setDateTimeText(this.startTimestamp);
+    endTimestamp(newValue) {
+      if (newValue) {
+        this.setMaxTimeRange(newValue);
+        if (!this.selectedTimeRange) {
+          this.updateSelectedTimeRange(this.startTimestamp);
+        }
       }
     },
-    preSelectedTimestamp(val) {
-      if (val) {
-        this.setSelectedTimeRange(val);
-        this.setDateTimeText(val);
+    preSelectedTimestamp(newValue) {
+      if (newValue) {
+        this.updateSelectedTimeRange(newValue);
       }
     },
   },
-  created() {
-  }
 };
 </script>

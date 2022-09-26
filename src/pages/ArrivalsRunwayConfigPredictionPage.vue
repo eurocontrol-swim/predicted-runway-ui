@@ -237,7 +237,7 @@ export default {
       }
     },
   },
-  created() {
+  mounted() {
     this.getPredictionResult();
     this.initTimestamps(this.$route.params.destinationIcao);
   }
